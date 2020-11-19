@@ -125,6 +125,7 @@ body {
           font-size: 2.3rem;
           line-height: 1.1;
           font-weight: 900;
+          font-style: italic;
           font-family: "Guardian Headline Full";
           color: #485086;
         }
@@ -195,4 +196,8 @@ body {
         stroke: white;
       }
     }
+  }
+
+  #Footer .related {
+    width: 100%;
   }

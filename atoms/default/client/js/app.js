@@ -5,6 +5,7 @@ import SocialBar from 'shared/js/SocialShare';
 import {$, $$} from 'shared/js/util';
 import FlipCard from "shared/js/FlipCard";
 import CardGrid from "shared/js/CardGrid";
+import RelatedContent from "shared/js/RelatedContent";
 
 
 
@@ -42,6 +43,11 @@ class PowerShop {
         // });
 
         render(<CardGrid cards={data.sheets.cards} />, $('.grid'));
+        render(<RelatedContent cards={data.sheets.related} />, $('.related'));
+
+        $$('.grid a, .related a').forEach(link => {
+            link.setAttribute('target', '_blank');
+        });
     }
 
 }
