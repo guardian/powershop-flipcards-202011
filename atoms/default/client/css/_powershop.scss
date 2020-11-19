@@ -76,6 +76,8 @@ body {
 .flipcard {
     perspective: 1500px;
     width: 100%;
+    max-width: 440px;
+    margin: auto;
     height: 600px;
     @include mq(desktop) {
       height: 550px;
