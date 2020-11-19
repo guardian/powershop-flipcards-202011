@@ -12,7 +12,6 @@ export default class FlipCard extends Component {
     }
 
     render(props, state) {
-        console.log(props);
         const img = `<%= path %>/card_${props.id}.svg`;
         return (
             <div class={ `flipcard ${state.flipped? 'active': ''}`} data-id={props.id}>
