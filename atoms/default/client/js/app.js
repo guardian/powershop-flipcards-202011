@@ -42,7 +42,7 @@ class PowerShop {
         //     console.log(e);
         // });
 
-        render(<CardGrid cards={data.sheets.cards} />, $('.grid'));
+        render(<CardGrid cards={data.sheets.cards} prompt={data.sheets.global[0].cardPrompt} />, $('.grid'));
         render(<RelatedContent cards={data.sheets.related} />, $('.related'));
 
         $$('.grid a, .related a').forEach(link => {

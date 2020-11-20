@@ -63,11 +63,16 @@ body {
         li:nth-child(even) .flipcard {
           .front,.back {
             background-color: #6572AA;
-            button.flip {
+            .btn-flip {
               background-color: #757FAE;
             }
             h2 {
               color: #F4BD42;
+            }
+          }
+          .back {
+            .content, a {
+              color: white;
             }
           }
         }
@@ -82,7 +87,7 @@ body {
     @include mq(desktop) {
       height: 550px;
     }
-    .card-body button.flip {
+    .card-body .btn-flip {
         position: absolute;
         left: 0;
         bottom: 0;
@@ -98,16 +103,41 @@ body {
       position: absolute;
       width: 100%;
       height: 100%;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
     
-      transition: transform 1s;
+      transition: all 1s;
       transform-style: preserve-3d;
     }
     &.active .card-body {
       transform: rotateY( 180deg ) ;
-      transition: transform 0.5s;
+      transition: all 0.5s;
     }
+    &:hover:not(.active), &:focus:not(.active) {
+       .card-body {
+      transform: rotateY( 20deg ) ;
+      box-shadow: 1px 1px 16px rgba(0, 0, 0, 0.2);
+      .prompt {
+        opacity: 1;
+        transform: translateX(-50%)  scale(1);
+      }
+    }
+  }
     
+    .prompt {
+      position: absolute;
+      white-space: nowrap;
+      padding: 1rem;
+      background-color: rgba(0,0,0,0.6);
+      border-radius: 6px;
+      color: white;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%) scale(1.2);
+      z-index: 4;
+      opacity: 0;
+      transition: opacity .5s ease, transform .3s;
+      transform-origin: 50%;
+    }
     .front,
     .back {
       display: grid;
@@ -120,6 +150,9 @@ body {
       background-color: #F4BD42;
       .content {
         position: relative;
+        @include mq(desktop) {
+          margin-bottom: 0.3rem;
+        }
         p, a {
           transition: all 1s ease;
           font-size: 1.1rem;
@@ -155,16 +188,20 @@ body {
           display: block;
           pointer-events: none;
           position: absolute;
-          top: 2%;
+          top: 0.8rem;
           left: 3%;
-          width: 92%;
-          height: 94.2%;
+          right: 3%;
+          bottom: 0;
+          // width: 92%;
+          // height: 94.2%;
           border: 3px solid white;
         }
       }
     }
     .front {
       z-index: 1;
+      cursor: pointer;
+      text-decoration: none;
     }
     .back {
       transform: rotateY( 180deg );
@@ -206,4 +243,9 @@ body {
 
   #Footer .related {
     width: 100%;
+  }
+  @include mq($until: tablet) {
+    #Glabs #Footer .InnerFooter .PartnerZoneLinks {
+    flex-basis: 100%;
+    }
   }
