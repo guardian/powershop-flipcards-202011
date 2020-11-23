@@ -237,30 +237,36 @@ const upload = () => {
     return mergeStream(uploadTasks)
 }
 
+/**
+ * Ensure correct AWS keys are set in ~/.bashrc
+ * Then use source ~/.bashrc to refresh keys in the current terminal window
+ * 
+ */
 
 const uploadStaging = () => {
+    console.log('Uploading build files to staging ...');
+    console.log(`\tPath: ${config.path}`);
+
     const atoms = (fs.readdirSync(".build"));
+    if (!gutil.env.assets) {
+        atoms = atoms.filter(n => n !== "assets");
+        console.log('\texcluding "assets" folder from upload.');
+        console.log('\tuse "--assets" arg to include assets in the upload');
+    }
     // const assetPath = `${gdnUrl}embed/${config.path}/assets`;
     const assetPath = '../assets';
     const s3Path = `embed/${config.path}`;
-
-    // const atomConfig = {
-    //     "title": `${config.title} – ${atom}`,
-    //     "docData": "",
-    //     "path": `${gdnUrl}/embed/${config.path}`
-    // }
 
     return src(`.build/**/*`)
         .pipe(replace('<%= path %>', assetPath))
         .pipe(replace('&lt;%= path %&gt;', assetPath))
         .pipe(replace('<%= atomPath %>', `${gdnUrl}/${s3Path}`))
         .pipe(s3Upload('max-age=31536000', s3Path))
-        .on("end", (cb) => {
-            console.log(`${gdnUrl}/embed/${config.path}`);
-            console.log(`${cdnUrl}/embed/${config.path}`);
-            return cb();
+        .on("end", () => {
+            console.log('External URLs:');
+            console.log(`\n\n S3\t\y-\t${gdnUrl}/embed/${config.path}/default/immersive.html`);
+            console.log(`\n\n Fastly\t\t -\t${cdnUrl}/embed/${config.path}/default/immersive.html`);
         })
-
 }
 
 
@@ -302,7 +308,7 @@ exports.build = build;
 exports.deploylive = deploy;
 exports.deploypreview = deploy;
 
-exports['deploy-staging'] = series(build, uploadStaging);
+exports['deploy-staging'] = series(uploadStaging);
 
 exports.log = getLogs;
 exports.url = url;
