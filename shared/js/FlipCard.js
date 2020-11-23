@@ -16,7 +16,7 @@ export default class FlipCard extends Component {
         return (
             <div class={ `flipcard ${state.flipped? 'active': ''}`} data-id={props.id}>
                 <div class="card-body">
-                    <div class="prompt">{props.prompt}</div>
+                    
                     <div class="back">
                         <div class="content">
                             <div class="border"></div>
