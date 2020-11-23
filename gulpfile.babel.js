@@ -21,6 +21,7 @@ const config = require("./config.json")
 const path = require("path")
 const named = require("vinyl-named")
 const cdnUrl = 'https://interactive.guim.co.uk';
+const gdnUrl = 'https://gdn-cdn.s3.amazonaws.com';
 const webpack = require('webpack')
 const ws = require('webpack-stream')
 const TerserPlugin = require('terser-webpack-plugin')
@@ -236,6 +237,33 @@ const upload = () => {
     return mergeStream(uploadTasks)
 }
 
+
+const uploadStaging = () => {
+    const atoms = (fs.readdirSync(".build"));
+    // const assetPath = `${gdnUrl}embed/${config.path}/assets`;
+    const assetPath = '../assets';
+    const s3Path = `embed/${config.path}`;
+
+    // const atomConfig = {
+    //     "title": `${config.title} – ${atom}`,
+    //     "docData": "",
+    //     "path": `${gdnUrl}/embed/${config.path}`
+    // }
+
+    return src(`.build/**/*`)
+        .pipe(replace('<%= path %>', assetPath))
+        .pipe(replace('&lt;%= path %&gt;', assetPath))
+        .pipe(replace('<%= atomPath %>', `${gdnUrl}/${s3Path}`))
+        .pipe(s3Upload('max-age=31536000', s3Path))
+        .on("end", (cb) => {
+            console.log(`${gdnUrl}/embed/${config.path}`);
+            console.log(`${cdnUrl}/embed/${config.path}`);
+            return cb();
+        })
+
+}
+
+
 const getAtoms = () => (fs.readdirSync(".build")).filter(n => n !== "assets" && n !== "index.html")
 
 const url = (cb) => {
@@ -273,6 +301,9 @@ const deploy = series(build, upload)
 exports.build = build;
 exports.deploylive = deploy;
 exports.deploypreview = deploy;
+
+exports['deploy-staging'] = series(build, uploadStaging);
+
 exports.log = getLogs;
 exports.url = url;
 exports.default = series(build, local, serve);
