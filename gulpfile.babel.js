@@ -247,12 +247,6 @@ const uploadStaging = () => {
     console.log('Uploading build files to staging ...');
     console.log(`\tPath: ${config.path}`);
 
-    const atoms = (fs.readdirSync(".build"));
-    if (!gutil.env.assets) {
-        atoms = atoms.filter(n => n !== "assets");
-        console.log('\texcluding "assets" folder from upload.');
-        console.log('\tuse "--assets" arg to include assets in the upload');
-    }
     // const assetPath = `${gdnUrl}embed/${config.path}/assets`;
     const assetPath = '../assets';
     const s3Path = `embed/${config.path}`;
@@ -264,8 +258,8 @@ const uploadStaging = () => {
         .pipe(s3Upload('max-age=31536000', s3Path))
         .on("end", () => {
             console.log('External URLs:');
-            console.log(`\n\n S3\t\y-\t${gdnUrl}/embed/${config.path}/default/immersive.html`);
-            console.log(`\n\n Fastly\t\t -\t${cdnUrl}/embed/${config.path}/default/immersive.html`);
+            console.log(`\n\n S3\t- ${gdnUrl}/embed/${config.path}/default/immersive.html`);
+            console.log(`\n\n Fastly\t-${cdnUrl}/embed/${config.path}/default/immersive.html`);
         })
 }
 
